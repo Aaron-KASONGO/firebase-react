@@ -1,10 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { getFirestore, collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs} from "firebase/firestore";
 import app from './connect';
 import Grid from './components/grid';
-import Form from './components/form'
+import Form from './components/form';
 
 
 class App  extends React.Component {
@@ -12,8 +11,15 @@ class App  extends React.Component {
     super(props);
     this.state = {
       tasks: [],
-      add: false
+      add: false,
+      isLoading: false
     };
+  }
+
+  changeLoading = () => {
+    this.setState((state) => ({
+      isLoading: !state.isLoading
+    }))
   }
 
   update() {
@@ -31,6 +37,11 @@ class App  extends React.Component {
       this.setState({
         tasks: tasks
       })
+
+      this.setState((state) => ({
+        isLoading: true
+      }))
+
     }, (error) => {
       console.log('Erreur !', error);
     });
@@ -64,8 +75,8 @@ class App  extends React.Component {
             </div>
         </div>
         <div className="container py-3">
-          {this.state.add && <Form update={() => this.update()} onChangeAdd={() => this.onChangeAdd()}/>}
-          <Grid tasks={this.state.tasks} onChangeAdd={() => this.onChangeAdd()} add={this.state.add}/>
+          {this.state.add && <Form update={() => this.update()} onChangeAdd={() => this.onChangeAdd()} changeLoading={() => this.changeLoading()}/>}
+          <Grid tasks={this.state.tasks} onChangeAdd={() => this.onChangeAdd()} add={this.state.add} update={(task) => this.update()} isLoading={this.state.isLoading}/>
         </div>
       </>
     );

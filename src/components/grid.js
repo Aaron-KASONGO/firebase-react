@@ -40,12 +40,18 @@ class Grid extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="card-body">
-                        <div className="row g-2">
-                            {
-                                (this.props.tasks) ? (this.props.tasks.map((task) => <Task key={task.id} task={task} />)) : <h4>Aucune tâche par ici !</h4>
-                            }
-                        </div>
+                    <div className="card-body">                        
+                        {
+                            this.props.isLoading ? (
+                                <div className="row g-2">
+                                    {
+                                        (this.props.tasks) ? (this.props.tasks.map((task) => <Task key={task.id} task={task} update={this.props.update} />)) : <h4>Aucune tâche par ici !</h4>
+                                    }
+                                </div>
+                            ) : (
+                                <div class="lds-ripple"><div></div><div></div></div>
+                            )
+                        }
                     </div>
                 </div>
             </>

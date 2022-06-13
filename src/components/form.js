@@ -1,30 +1,38 @@
 import { Component } from "react";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import app from "../connect";
+import { motion } from "framer-motion";
+
 
 class Form extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
         this.props.onChangeAdd();
+        this.props.changeLoading();
 
         const db = getFirestore(app);
 
-        addDoc(collection(db, "Task"), {
-            title: e.target.id_title.value,
-            description: e.target.id_description.value,
-          }).then((docRef) => {
-              console.log(docRef);
-
-              this.props.update();
-          })
+        if (e.target.id_title.value) {
+            addDoc(collection(db, "Task"), {
+                title: e.target.id_title.value,
+                description: e.target.id_description.value,
+                checked: false
+              }).then((docRef) => {
+    
+                  this.props.update();
+              })
+        }
         
     }
 
     render() { 
         return (
             <>
-                <div className="row">
+                <motion.div
+                initial={{ y: -20}}
+                animate={{ y: 0}}
+                className="row">
                     <div className="div mb-3 offset-3 col-6">
                         <form onSubmit={(e) => this.onSubmit(e)} className="card p-4">
                             <div className="mb-3">
@@ -40,7 +48,7 @@ class Form extends Component {
                             </div>
                         </form>
                     </div>
-                </div>
+                </motion.div>
             </>
         );
     }
